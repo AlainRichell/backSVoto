@@ -39,8 +39,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+# Esto es opcional, pero puede ser útil para configurar el tiempo de expiración del token JWT
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),  # Expira después de 1 hora
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Expira después de 7 días
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,9 +100,9 @@ WSGI_APPLICATION = 'backSVoto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_votacion',  # Reemplaza con el nombre de tu base de datos
+        'NAME': 'db_elecciones',  # Reemplaza con el nombre de tu base de datos
         'USER': 'postgres',           # Reemplaza con el usuario de PostgreSQL
-        'PASSWORD': '1234',    # Reemplaza con la contraseña del usuario
+        'PASSWORD': 'Angel4167*',    # Reemplaza con la contraseña del usuario
         'HOST': 'localhost',         # Dirección del servidor, usa 'localhost' para desarrollo local
         'PORT': '5432',              # Puerto predeterminado de PostgreSQL
     }
@@ -141,3 +161,6 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS',
 ]
+
+
+AUTH_USER_MODEL = 'votoApp.Usuario'

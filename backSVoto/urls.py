@@ -20,9 +20,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
 from django.views.generic import RedirectView
+from votoApp.views import FacultadStatsAPIView, GeneralStatsAPIView, CustomTokenObtainPairView,validateToken
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('votoApp.urls')),
+    path('api/stats/<path:facultad>/', FacultadStatsAPIView.as_view(), name='facultad-stats'),
+    path('api/stats_general/', GeneralStatsAPIView.as_view(), name='general-stats'),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='custom_token_obtain_pair'),
+    path('api/validatetoken/', validateToken),
     path('', RedirectView.as_view(url='admin/'))
 ]
