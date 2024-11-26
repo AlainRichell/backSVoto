@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+config.encoding = 'cp1251'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +27,6 @@ SECRET_KEY = 'django-insecure-kd=dsv2xic69p+skr6j*2!bpq#nmf-vm)i+shqb)n6m%eaxbq3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+   
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -100,11 +100,11 @@ WSGI_APPLICATION = 'backSVoto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_elecciones',  # Reemplaza con el nombre de tu base de datos
-        'USER': 'postgres',           # Reemplaza con el usuario de PostgreSQL
-        'PASSWORD': 'Angel4167*',    # Reemplaza con la contraseña del usuario
-        'HOST': 'localhost',         # Dirección del servidor, usa 'localhost' para desarrollo local
-        'PORT': '5432',              # Puerto predeterminado de PostgreSQL
+        'NAME': config("DB_NAME"),  # Cambia esto por el nombre de tu base de datos
+        'USER': config("DB_USER"),
+        'PASSWORD': config("DB_PASSWORD"),
+        'HOST': config("DB_HOST"),  # Cambia esto si tu base de datos está en otro servidor
+        'PORT': config("DB_PORT"),  # El puerto predeterminado de PostgreSQL
     }
 }
 
@@ -151,7 +151,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_METHODS = [
     'GET',
@@ -161,6 +160,10 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS',
 ]
+
+ALLOWED_HOSTS = config('ALLOWED_HOST_ENV',cast=lambda v: [s.strip() for s in v.split(',')])
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS_ENV',cast=lambda v: [s.strip() for s in v.split(',')])
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 AUTH_USER_MODEL = 'votoApp.Usuario'

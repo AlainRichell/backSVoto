@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django import forms
-from .models import Imagen, Usuario, Persona
+from .models import Imagen, Usuario, Persona, Evento
 import uuid
 
 admin.site.site_header = 'Administración del sistema'
 admin.site.index_title = 'Panel de control'
 admin.site.site_title = 'Votación'
 admin.site.site_url = 'http://localhost:4200'
-
+admin.site.register(Evento)
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
     list_display = ('username','area', 'email', 'first_name', 'last_name', 'is_staff','is_active')  # Campos existentes

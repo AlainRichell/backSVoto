@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Persona, Imagen
+from .models import Usuario, Persona, Imagen, Evento
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,4 +26,9 @@ class PersonaStatsSerializer(serializers.Serializer):
 class PersonaSerializerStat(serializers.ModelSerializer):
     class Meta:
         model = Persona
+        fields = '__all__'
+
+class EventoSerializerStat(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
         fields = '__all__'

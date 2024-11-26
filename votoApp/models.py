@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
+
+
+class Evento(models.Model):
+    id_evento = models.AutoField(primary_key=True)
+    activo = models.BooleanField(default=False, null=True)
+
 class Usuario(AbstractUser):
     area = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
