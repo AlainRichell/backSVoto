@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 from decouple import config
 config.encoding = 'cp1251'
 
@@ -98,14 +99,11 @@ WSGI_APPLICATION = 'backSVoto.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME"),  # Cambia esto por el nombre de tu base de datos
-        'USER': config("DB_USER"),
-        'PASSWORD': config("DB_PASSWORD"),
-        'HOST': config("DB_HOST"),  # Cambia esto si tu base de datos está en otro servidor
-        'PORT': config("DB_PORT"),  # El puerto predeterminado de PostgreSQL
-    }
+    'default': dj_database_url.parse(
+        config('DATABASE_URL'),
+        conn_max_age=600,  # Conexión persistente durante 600 segundos
+        ssl_require=False  # Cambiar a True si usas SSL
+    )
 }
 
 
