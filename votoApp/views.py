@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework import viewsets, status
-from .models import Usuario, Persona, Imagen
+from .models import Usuario, Persona, Imagen, Evento
 from .serializers import UsuarioSerializer, PersonaSerializer, ImagenSerializer, PersonaSerializerStat
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
@@ -33,6 +33,9 @@ class PersonaViewSet(viewsets.ModelViewSet):
     # Endpoint para obtener persona y su imagen por codigo barra
     @action(detail=False, methods=['get'])
     def persona_con_imagen(self, request):
+        evento = Evento.objects.all().first()
+        if not evento.activo :
+            return Response({"error": "Evento finalizado"}, status=status.HTTP_404_NOT_FOUND)
         codigobarra = request.query_params.get('codigobarra')
         if not codigobarra:
             return Response({'error': 'Se requiere el parámetro codigo barra'}, status=status.HTTP_400_BAD_REQUEST)
@@ -43,7 +46,7 @@ class PersonaViewSet(viewsets.ModelViewSet):
                 persona_data = PersonaSerializer(persona).data
                 return Response({'error': 'Estudiante inactivo','persona': persona_data}, status=status.HTTP_400_BAD_REQUEST)
             if persona.acceso:
-                return Response({'error': 'El Estudiante ya realizó su voto'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'La persona en cuestión ya realizó su voto'}, status=status.HTTP_400_BAD_REQUEST)
             persona.acceso = True
             persona.fecha = timezone.now()
             persona.save()
@@ -419,7 +422,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         # Llamar al método de la clase base para obtener el par de tokens
         response = super().post(request, *args, **kwargs)
-
+       
         # Obtener el usuario
         username = request.data.get("username")
         try:
@@ -438,6 +441,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 @permission_classes([AllowAny])
 def validateToken(request):
     token = request.data.get('token')
+    
     if not token:
         return Response({'error': 'Se requiere un token en la solicitud.'}, status=status.HTTP_400_BAD_REQUEST)
     try:

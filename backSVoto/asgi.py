@@ -7,6 +7,9 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
+
+#application = get_asgi_application()
+
 import os
 
 from django.core.asgi import get_asgi_application
